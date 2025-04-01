@@ -7,8 +7,9 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/iakigarci/go-ddd-microservice-template/config"
-	"github.com/iakigarci/go-ddd-microservice-template/pkg/logger"
+	"real-time-messaging/producer/config"
+	"real-time-messaging/producer/pkg/logger"
+
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"
 	"go.uber.org/zap"

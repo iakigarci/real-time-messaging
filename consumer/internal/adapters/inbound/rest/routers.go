@@ -2,10 +2,10 @@ package http_gin
 
 import (
 	"fmt"
+	"real-time-messaging/consumer/config"
+	di "real-time-messaging/consumer/internal"
 
 	"github.com/gin-gonic/gin"
-	"github.com/iakigarci/go-ddd-microservice-template/config"
-	di "github.com/iakigarci/go-ddd-microservice-template/internal"
 )
 
 type Router struct {

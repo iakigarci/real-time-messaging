@@ -3,7 +3,8 @@ package logger
 import (
 	"sync"
 
-	"github.com/iakigarci/go-ddd-microservice-template/config"
+	"real-time-messaging/consumer/config"
+
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 )

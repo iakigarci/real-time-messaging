@@ -8,8 +8,9 @@ import (
 	"strconv"
 	"time"
 
+	"real-time-messaging/consumer/config"
+
 	"github.com/gin-gonic/gin"
-	"github.com/iakigarci/go-ddd-microservice-template/config"
 )
 
 const (

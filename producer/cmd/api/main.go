@@ -3,11 +3,12 @@ package main
 import (
 	"log"
 
-	"github.com/iakigarci/go-ddd-microservice-template/config"
-	di "github.com/iakigarci/go-ddd-microservice-template/internal"
-	http_gin "github.com/iakigarci/go-ddd-microservice-template/internal/adapters/inbound/rest"
-	httpserver "github.com/iakigarci/go-ddd-microservice-template/pkg/http"
-	"github.com/iakigarci/go-ddd-microservice-template/pkg/logger"
+	"real-time-messaging/producer/config"
+	di "real-time-messaging/producer/internal"
+	http_gin "real-time-messaging/producer/internal/adapters/inbound/rest"
+	httpserver "real-time-messaging/producer/pkg/http"
+	"real-time-messaging/producer/pkg/logger"
+
 	"go.uber.org/zap"
 )
 

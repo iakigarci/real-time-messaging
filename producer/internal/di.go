@@ -1,8 +1,8 @@
 package di
 
 import (
-	"github.com/iakigarci/go-ddd-microservice-template/config"
-	"github.com/iakigarci/go-ddd-microservice-template/pkg/logger"
+	"real-time-messaging/producer/config"
+	"real-time-messaging/producer/pkg/logger"
 )
 
 // Container holds all the dependencies of the application
