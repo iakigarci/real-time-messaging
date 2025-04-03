@@ -2,11 +2,11 @@
     "swagger": "2.0",
     "info": {
         "description": "API for managing real-time messaging",
-        "title": "Real-Time Messaging Producer API",
+        "title": "Real-Time Messaging Consumer API",
         "contact": {},
         "version": "1.0"
     },
-    "host": "localhost:8080",
+    "host": "localhost:8081",
     "basePath": "/v1",
     "paths": {
         "/health": {
@@ -23,7 +23,7 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/real-time-messaging_producer_pkg_http.SuccessResponseData"
+                            "$ref": "#/definitions/real-time-messaging_consumer_pkg_http.SuccessResponseData"
                         }
                     }
                 }
@@ -31,7 +31,7 @@
         }
     },
     "definitions": {
-        "real-time-messaging_producer_pkg_http.SuccessResponseData": {
+        "real-time-messaging_consumer_pkg_http.SuccessResponseData": {
             "type": "object",
             "properties": {
                 "data": {},

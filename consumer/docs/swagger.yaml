@@ -1,17 +1,17 @@
 basePath: /v1
 definitions:
-  real-time-messaging_producer_pkg_http.SuccessResponseData:
+  real-time-messaging_consumer_pkg_http.SuccessResponseData:
     properties:
       data: {}
       status:
         description: '"success"'
         type: string
     type: object
-host: localhost:8080
+host: localhost:8081
 info:
   contact: {}
   description: API for managing real-time messaging
-  title: Real-Time Messaging Producer API
+  title: Real-Time Messaging Consumer API
   version: "1.0"
 paths:
   /health:
@@ -25,7 +25,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/real-time-messaging_producer_pkg_http.SuccessResponseData'
+            $ref: '#/definitions/real-time-messaging_consumer_pkg_http.SuccessResponseData'
       summary: Health Check
 securityDefinitions:
   BearerAuth:
