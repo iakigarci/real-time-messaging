@@ -1,0 +1,67 @@
+services:
+  consumer-app:
+    build:
+      context: ./consumer
+      dockerfile: Dockerfile
+    ports:
+      - "${CONSUMER_HTTP_PORT}:${CONSUMER_HTTP_PORT}"
+    env_file:
+      - .env
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - app_network
+    volumes:
+      - ./consumer:/app
+      - ./consumer/tmp:/app/tmp
+      - ./.env:/app/.env
+    restart: unless-stopped
+  
+  producer-app:
+    build:
+      context: ./producer
+      dockerfile: Dockerfile
+    ports:
+      - "${PRODUCER_HTTP_PORT}:${PRODUCER_HTTP_PORT}"
+    env_file:
+      - .env
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - app_network
+    volumes:
+      - ./producer:/app
+      - ./producer/tmp:/app/tmp
+      - ./.env:/app/.env
+    restart: unless-stopped
+
+  db:
+    image: postgres:14-alpine
+    environment:
+      - POSTGRES_HOST_AUTH_METHOD=md5
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    ports: 
+      - "${POSTGRES_PORT}:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - app_network
+    restart: unless-stopped
+
+networks:
+  app_network:
+    driver: bridge
+
+volumes:
+  postgres_data:
+  consumer_data:
+  producer_data:
