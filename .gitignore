@@ -19,3 +19,6 @@
 
 # Go workspace file
 go.work
+# Temporary directories
+producer/tmp/main
+consumer/tmp/main

@@ -9,9 +9,22 @@ import (
 	httpserver "real-time-messaging/producer/pkg/http"
 	"real-time-messaging/producer/pkg/logger"
 
+	_ "real-time-messaging/producer/docs"
+
+	_ "github.com/swaggo/files"
+	_ "github.com/swaggo/gin-swagger"
+
 	"go.uber.org/zap"
 )
 
+// @title Real-Time Messaging Producer API
+// @version 1.0
+// @description API for managing real-time messaging
+// @host localhost:8080
+// @BasePath /v1
+// @securityDefinitions.apikey BearerAuth
+// @in header
+// @name Authorization
 func main() {
 	cfg, err := config.LoadConfig[config.Config]()
 	if err != nil {

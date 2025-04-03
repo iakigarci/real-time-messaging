@@ -25,8 +25,8 @@ func (p Password) MarshalText() ([]byte, error) {
 }
 
 type Config struct {
-	App      AppConfig      `mapstructure:"app"`
-	HTTP     HTTPConfig     `mapstructure:"http"`
+	App      AppConfig      `mapstructure:"consumer_app"`
+	HTTP     HTTPConfig     `mapstructure:"consumer_http"`
 	Postgres DatabaseConfig `mapstructure:"postgres"`
 	Logging  LogConfig      `mapstructure:"logging"`
 }

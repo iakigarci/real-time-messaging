@@ -4,14 +4,25 @@ import (
 	"log"
 
 	"real-time-messaging/consumer/config"
+	_ "real-time-messaging/consumer/docs"
 	di "real-time-messaging/consumer/internal"
 	http_gin "real-time-messaging/consumer/internal/adapters/inbound/rest"
 	httpserver "real-time-messaging/consumer/pkg/http"
 	"real-time-messaging/consumer/pkg/logger"
 
+	_ "github.com/swaggo/files"
+	_ "github.com/swaggo/gin-swagger"
 	"go.uber.org/zap"
 )
 
+// @title Real-Time Messaging Consumer API
+// @version 1.0
+// @description API for managing real-time messaging
+// @host localhost:8081
+// @BasePath /v1
+// @securityDefinitions.apikey BearerAuth
+// @in header
+// @name Authorization
 func main() {
 	cfg, err := config.LoadConfig[config.Config]()
 	if err != nil {
