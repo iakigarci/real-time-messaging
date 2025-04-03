@@ -1,13 +1,11 @@
 package handlers
 
 import (
-	"net/http"
+	httpserver "real-time-messaging/producer/pkg/http"
 
 	"github.com/gin-gonic/gin"
 )
 
 func HealthCheck(c *gin.Context) {
-	c.JSON(http.StatusOK, gin.H{
-		"status": "healthy",
-	})
+	httpserver.SuccessResponse(c, "healthy")
 }
