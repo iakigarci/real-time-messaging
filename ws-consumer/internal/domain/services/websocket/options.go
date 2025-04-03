@@ -1,7 +1,7 @@
 package ws
 
 import (
-	"real-time-messaging/producer/pkg/logger"
+	"real-time-messaging/consumer/pkg/logger"
 
 	"github.com/gorilla/websocket"
 )

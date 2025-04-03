@@ -7,7 +7,6 @@ import (
 
 	di "real-time-messaging/producer/internal"
 	"real-time-messaging/producer/internal/adapters/inbound/rest/v1/handlers"
-	ws "real-time-messaging/producer/internal/domain/services/websocket"
 
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/websocket"
@@ -41,7 +40,6 @@ func New(config *config.Config, container *di.Container) *Router {
 
 	v1 := r.Group("/v1")
 	{
-		router.buildWebSocketRoutes(v1)
 		router.buildSwaggerRoutes(v1)
 		router.buildIndexRoutes(v1)
 	}
@@ -62,23 +60,5 @@ func (r *Router) buildIndexRoutes(rg *gin.RouterGroup) {
 	indexRoutes := rg.Group("/")
 	{
 		indexRoutes.GET("/health", handlers.HealthCheck)
-	}
-}
-
-func (router *Router) buildWebSocketRoutes(rg *gin.RouterGroup) {
-	websocketService := ws.NewWebsocketService(
-		ws.WithLogger(router.container.Logger),
-		ws.WithUpgrader(router.upgrader),
-	)
-
-	webSocketHandler := handlers.NewWebsocketHandler(
-		router.upgrader,
-		websocketService,
-		router.container.Logger,
-	)
-
-	websocketRoutes := rg.Group("/ws/")
-	{
-		websocketRoutes.GET("", webSocketHandler.WebsocketReceive)
 	}
 }

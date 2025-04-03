@@ -1,9 +1,9 @@
 package handlers
 
 import (
-	port "real-time-messaging/producer/internal/domain/ports"
-	httpserver "real-time-messaging/producer/pkg/http"
-	"real-time-messaging/producer/pkg/logger"
+	port "real-time-messaging/consumer/internal/domain/ports"
+	httpserver "real-time-messaging/consumer/pkg/http"
+	"real-time-messaging/consumer/pkg/logger"
 
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/websocket"

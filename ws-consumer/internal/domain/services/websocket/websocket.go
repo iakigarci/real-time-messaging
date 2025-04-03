@@ -2,7 +2,7 @@ package ws
 
 import (
 	"net/http"
-	"real-time-messaging/producer/pkg/logger"
+	"real-time-messaging/consumer/pkg/logger"
 	"strconv"
 
 	"github.com/gorilla/websocket"
