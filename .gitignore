@@ -20,5 +20,7 @@
 # Go workspace file
 go.work
 # Temporary directories
-producer/tmp/main
-consumer/tmp/main
+ws-consumer/tmp/build-errors.log
+ws-consumer/tmp/main
+ws-producer/tmp/build-errors.log
+ws-producer/tmp/main
