@@ -7,9 +7,12 @@ import (
 
 	di "real-time-messaging/producer/internal"
 	"real-time-messaging/producer/internal/adapters/inbound/rest/v1/handlers"
+	ws "real-time-messaging/producer/internal/domain/services/websocket"
 
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/websocket"
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
 type Router struct {
@@ -39,6 +42,8 @@ func New(config *config.Config, container *di.Container) *Router {
 	v1 := r.Group("/v1")
 	{
 		router.buildWebSocketRoutes(v1)
+		router.buildSwaggerRoutes(v1)
+		router.buildIndexRoutes(v1)
 	}
 
 	r.Run(fmt.Sprintf(":%d", config.HTTP.Port))
@@ -46,7 +51,31 @@ func New(config *config.Config, container *di.Container) *Router {
 	return router
 }
 
+func (r *Router) buildSwaggerRoutes(rg *gin.RouterGroup) {
+	swaggerRoutes := rg.Group("/swagger")
+	{
+		swaggerRoutes.GET("/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+	}
+}
+
+func (r *Router) buildIndexRoutes(rg *gin.RouterGroup) {
+	indexRoutes := rg.Group("/")
+	{
+		indexRoutes.GET("/health", handlers.HealthCheck)
+	}
+}
+
 func (router *Router) buildWebSocketRoutes(v1 *gin.RouterGroup) {
-	webSocketHandler := handlers.NewWebsocketHandler()
+	websocketService := ws.NewWebsocketService(
+		ws.WithLogger(router.container.Logger),
+		ws.WithUpgrader(router.upgrader),
+	)
+
+	webSocketHandler := handlers.NewWebsocketHandler(
+		router.upgrader,
+		websocketService,
+		router.container.Logger,
+	)
+
 	v1.GET("/ws", webSocketHandler.Websocket)
 }

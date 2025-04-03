@@ -1,8 +1,8 @@
 package handlers
 
 import (
-	"net/http"
-
+	port "real-time-messaging/producer/internal/domain/ports"
+	httpserver "real-time-messaging/producer/pkg/http"
 	"real-time-messaging/producer/pkg/logger"
 
 	"github.com/gin-gonic/gin"
@@ -10,36 +10,25 @@ import (
 )
 
 type WebsocketHandler struct {
-	upgrader websocket.Upgrader
-	logger   *logger.Logger
+	upgrader         websocket.Upgrader
+	websocketService port.WebsocketService
+	logger           *logger.Logger
 }
 
-func NewWebsocketHandler() *WebsocketHandler {
-	return &WebsocketHandler{}
+func NewWebsocketHandler(upgrader websocket.Upgrader, websocketService port.WebsocketService, logger *logger.Logger) *WebsocketHandler {
+	return &WebsocketHandler{
+		upgrader:         upgrader,
+		websocketService: websocketService,
+		logger:           logger,
+	}
 }
 
 func (h *WebsocketHandler) Websocket(c *gin.Context) {
 	conn, err := h.upgrader.Upgrade(c.Writer, c.Request, nil)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Could not upgrade connection"})
+		httpserver.ErrorResponse(c, err)
 		return
 	}
-	defer conn.Close()
 
-	// Listen for incoming messages
-	for {
-		messageType, message, err := conn.ReadMessage()
-		if err != nil {
-			if websocket.IsUnexpectedCloseError(err, websocket.CloseGoingAway, websocket.CloseAbnormalClosure) {
-				// Log error if needed
-			}
-			break
-		}
-
-		// Handle the received message
-		// You can process the message here or send it to another service
-		if err := conn.WriteMessage(messageType, message); err != nil {
-			break
-		}
-	}
+	h.websocketService.ReadMessage(conn)
 }
