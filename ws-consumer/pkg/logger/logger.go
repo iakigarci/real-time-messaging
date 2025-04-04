@@ -75,28 +75,3 @@ func getLogLevel(level config.LogLevel) zap.AtomicLevel {
 		return zap.NewAtomicLevelAt(zapcore.InfoLevel)
 	}
 }
-
-func (l *Logger) ErrorAttrs(msg string, err error, attrs ...map[string]string) {
-	fields := []zap.Field{zap.Error(err)}
-
-	if len(attrs) > 0 {
-		for key, value := range attrs[0] {
-			fields = append(fields, zap.String(key, value))
-		}
-	}
-
-	l.Logger.Error(msg, fields...)
-}
-
-func (l *Logger) InfoAttrs(msg string, attrs ...map[string]string) {
-	var fields []zap.Field
-
-	if len(attrs) > 0 {
-		fields = make([]zap.Field, 0, len(attrs[0]))
-		for key, value := range attrs[0] {
-			fields = append(fields, zap.String(key, value))
-		}
-	}
-
-	l.Logger.Info(msg, fields...)
-}
