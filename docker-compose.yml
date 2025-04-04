@@ -1,7 +1,7 @@
 services:
-  consumer-app:
+  ws-consumer-app:
     build:
-      context: ./consumer
+      context: ./ws-consumer
       dockerfile: Dockerfile
     ports:
       - "${CONSUMER_HTTP_PORT}:${CONSUMER_HTTP_PORT}"
@@ -13,14 +13,14 @@ services:
     networks:
       - app_network
     volumes:
-      - ./consumer:/app
-      - ./consumer/tmp:/app/tmp
+      - ./ws-consumer:/app
+      - ./ws-consumer/tmp:/app/tmp
       - ./.env:/app/.env
     restart: unless-stopped
   
-  producer-app:
+  ws-producer-app:
     build:
-      context: ./producer
+      context: ./ws-producer
       dockerfile: Dockerfile
     ports:
       - "${PRODUCER_HTTP_PORT}:${PRODUCER_HTTP_PORT}"
@@ -32,8 +32,8 @@ services:
     networks:
       - app_network
     volumes:
-      - ./producer:/app
-      - ./producer/tmp:/app/tmp
+      - ./ws-producer:/app
+      - ./ws-producer/tmp:/app/tmp
       - ./.env:/app/.env
     restart: unless-stopped
 
