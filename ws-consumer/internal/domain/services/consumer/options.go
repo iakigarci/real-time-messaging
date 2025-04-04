@@ -27,8 +27,8 @@ func WithWebsocket(ws port.Websocket) Option {
 	}
 }
 
-func WithEventBroker(eventBroker port.EventBroker) Option {
+func WithMessageProducer(messageProducer port.MessageEventPublisher) Option {
 	return func(c *ConsumerService) {
-		c.eventBrokerPort = eventBroker
+		c.messageProducer = messageProducer
 	}
 }

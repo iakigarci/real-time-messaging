@@ -57,6 +57,22 @@ services:
       - app_network
     restart: unless-stopped
 
+  nats:
+    image: nats:latest
+    ports:
+      - "${NATS_PORT}:4222"
+      - "8222:8222"
+    command:
+      - "-js"
+      - "--user"
+      - "nats_user"
+      - "--pass"
+      - "nats_password"
+    volumes:
+      - nats_data:/data
+    networks:
+      - app_network
+      
 networks:
   app_network:
     driver: bridge
@@ -65,3 +81,4 @@ volumes:
   postgres_data:
   consumer_data:
   producer_data:
+  nats_data:

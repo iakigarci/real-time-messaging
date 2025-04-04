@@ -3,12 +3,15 @@ package main
 import (
 	"log"
 	"net/http"
+	"os"
 
 	"real-time-messaging/consumer/config"
 	_ "real-time-messaging/consumer/docs"
 	di "real-time-messaging/consumer/internal"
 	http_gin "real-time-messaging/consumer/internal/adapters/inbound/rest"
 	ws "real-time-messaging/consumer/internal/adapters/inbound/websocket"
+	"real-time-messaging/consumer/internal/adapters/outbound/nats"
+	"real-time-messaging/consumer/internal/adapters/outbound/nats/producers"
 	httpserver "real-time-messaging/consumer/pkg/http"
 	"real-time-messaging/consumer/pkg/logger"
 
@@ -56,14 +59,28 @@ func getDIContainer(cfg *config.Config, logger *logger.Logger) *di.Container {
 			EnableCompression: true,
 		}),
 		ws.WithHandlers(func(messageType int, message []byte) error {
+			logger.Info("Processing websocket message",
+				zap.Int("messageType", messageType),
+				zap.ByteString("message", message))
+
 			return nil
 		}),
 	)
+
+	natsClient, err := nats.NewClient(cfg, logger)
+	if err != nil {
+		logger.Error("Failed to create NATS client", zap.Error(err))
+		os.Exit(1)
+	}
+
+	messageProducer := producers.NewMessageProducer(natsClient)
 
 	return di.NewContainer(
 		cfg,
 		logger,
 		websocketPort,
+		natsClient,
+		messageProducer,
 	)
 }
 

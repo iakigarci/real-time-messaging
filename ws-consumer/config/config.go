@@ -28,6 +28,7 @@ type Config struct {
 	App      AppConfig      `mapstructure:"consumer_app"`
 	HTTP     HTTPConfig     `mapstructure:"consumer_http"`
 	Postgres DatabaseConfig `mapstructure:"postgres"`
+	NATS     NATSConfig     `mapstructure:"nats"`
 	Logging  LogConfig      `mapstructure:"logging"`
 }
 
@@ -58,6 +59,12 @@ type DatabaseConfig struct {
 type LogConfig struct {
 	Level  LogLevel `mapstructure:"level"`
 	Format string   `mapstructure:"format"`
+}
+
+type NATSConfig struct {
+	URL      string `mapstructure:"url"`
+	Username string `mapstructure:"username"`
+	Password string `mapstructure:"password"`
 }
 
 func LoadConfig[E any]() (*E, error) {

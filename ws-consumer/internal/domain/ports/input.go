@@ -9,7 +9,7 @@ import (
 
 type Websocket interface {
 	Upgrade(c *gin.Context) (*websocket.Conn, error)
-	Receive(conn *websocket.Conn) (entities.Message, error)
+	Receive(conn *websocket.Conn) (*entities.Message, error)
 }
 
 type Consumer interface {

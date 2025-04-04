@@ -1,7 +1,14 @@
 package ports
 
-import "real-time-messaging/consumer/internal/domain/entities"
+import (
+	"context"
+	"real-time-messaging/consumer/internal/domain/events"
+)
 
 type EventBroker interface {
-	Publish(message entities.Message) error
+	Publish(message events.BaseEvent) error
+}
+
+type MessageEventPublisher interface {
+	PublishMessage(ctx context.Context, message events.BaseEvent) error
 }

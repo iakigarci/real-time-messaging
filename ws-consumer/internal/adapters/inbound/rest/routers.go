@@ -61,6 +61,7 @@ func (router *Router) buildWebSocketRoutes(rg *gin.RouterGroup) {
 	consumerService := consumer.NewConsumerService(
 		consumer.WithLogger(router.container.Logger),
 		consumer.WithWebsocket(router.container.WebsocketPort),
+		consumer.WithMessageProducer(router.container.MessageProducer),
 	)
 
 	webSocketHandler := handlers.NewWebsocketHandler(

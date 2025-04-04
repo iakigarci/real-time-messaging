@@ -1,10 +1,12 @@
 package handlers
 
 import (
+	"net/http"
 	port "real-time-messaging/consumer/internal/domain/ports"
 	"real-time-messaging/consumer/pkg/logger"
 
 	"github.com/gin-gonic/gin"
+	"go.uber.org/zap"
 )
 
 type WebsocketHandler struct {
@@ -26,5 +28,9 @@ func NewWebsocketHandler(consumerPort port.Consumer, logger *logger.Logger) *Web
 // @Router /v1/ws [get]
 // @x-hidden true
 func (h *WebsocketHandler) WebsocketReceive(c *gin.Context) {
-	go h.consumerPort.Consume(c)
+	if err := h.consumerPort.Consume(c); err != nil {
+		h.logger.Error("error consuming websocket", zap.Error(err))
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
 }
