@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"real-time-messaging/consumer/internal/domain/entities"
 	"real-time-messaging/consumer/pkg/logger"
-	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/websocket"
@@ -35,7 +34,6 @@ func (w *Websocket) Receive(conn *websocket.Conn) (*entities.Message, error) {
 		return nil, err
 	}
 
-	// Execute all registered handlers
 	for _, handler := range w.handlers {
 		if err := handler(messageType, message); err != nil {
 			return nil, err
@@ -43,9 +41,8 @@ func (w *Websocket) Receive(conn *websocket.Conn) (*entities.Message, error) {
 	}
 
 	return &entities.Message{
-		Content:   string(message),
-		CreatedAt: time.Now(),
-		Type:      messageType,
+		Content: string(message),
+		Type:    messageType,
 	}, nil
 }
 
