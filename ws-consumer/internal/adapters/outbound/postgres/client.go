@@ -4,7 +4,6 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
-	"strconv"
 	"time"
 
 	"real-time-messaging/consumer/config"
@@ -68,21 +67,21 @@ func initPg(cfg *config.Config, logger *logger.Logger) (*Postgres, error) {
 			}
 		}
 
-		pg.logger.InfoAttrs("Postgres trying to connect, attempts left", map[string]string{
-			"attempts": strconv.Itoa(pg.connAttempts),
-		})
+		pg.logger.Info("Postgres trying to connect, attempts left",
+			zap.Int("attempts", pg.connAttempts),
+		)
 		time.Sleep(pg.connTimeout)
 		pg.connAttempts--
 	}
 
 	if err != nil {
-		pg.logger.ErrorAttrs("Postgres connection failed", err, map[string]string{
-			"host":    cfg.Postgres.Host,
-			"port":    strconv.Itoa(cfg.Postgres.Port),
-			"user":    cfg.Postgres.User,
-			"dbname":  cfg.Postgres.DBName,
-			"sslmode": cfg.Postgres.SSLMode,
-		})
+		pg.logger.Info("Postgres connection failed",
+			zap.String("host", cfg.Postgres.Host),
+			zap.Int("port", cfg.Postgres.Port),
+			zap.String("user", cfg.Postgres.User),
+			zap.String("dbname", cfg.Postgres.DBName),
+			zap.String("sslmode", cfg.Postgres.SSLMode),
+		)
 		return nil, err
 	}
 
