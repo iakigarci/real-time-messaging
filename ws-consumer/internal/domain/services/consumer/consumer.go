@@ -21,13 +21,14 @@ func (s *ConsumerService) Consume(c *gin.Context) error {
 		zap.String("sec-websocket-key", c.GetHeader("Sec-WebSocket-Key")),
 		zap.String("sec-websocket-version", c.GetHeader("Sec-WebSocket-Version")),
 	)
-	conn, err := s.wsPort.Upgrade(c.Writer, c.Request)
+
+	conn, err := s.wsPort.Upgrade(c)
 	if err != nil {
 		s.logger.Error("failed to upgrade websocket", zap.Error(err))
 		return err
 	}
 
-	message, err := s.wsPort.Read(conn)
+	message, err := s.wsPort.Receive(conn)
 	if err != nil {
 		s.logger.Error("failed to read websocket message", zap.Error(err))
 		return err

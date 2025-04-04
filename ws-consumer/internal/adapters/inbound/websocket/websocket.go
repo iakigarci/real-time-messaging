@@ -2,7 +2,6 @@ package ws
 
 import (
 	"errors"
-	"net/http"
 	"real-time-messaging/consumer/internal/domain/entities"
 	"real-time-messaging/consumer/pkg/logger"
 	"time"
@@ -18,11 +17,14 @@ type Websocket struct {
 	handlers []func(messageType int, message []byte) error
 }
 
-func (w *Websocket) Upgrade(writer http.ResponseWriter, request *http.Request) (*websocket.Conn, error) {
-	return w.upgrader.Upgrade(writer, request, nil)
+func (w *Websocket) Upgrade(c *gin.Context) (*websocket.Conn, error) {
+	if !w.isWebSocketUpgrade(c) {
+		return nil, errors.New("not a websocket upgrade request")
+	}
+	return w.upgrader.Upgrade(c.Writer, c.Request, nil)
 }
 
-func (w *Websocket) Read(conn *websocket.Conn) (entities.Message, error) {
+func (w *Websocket) Receive(conn *websocket.Conn) (entities.Message, error) {
 	defer conn.Close()
 
 	for {
@@ -59,7 +61,7 @@ func (w *Websocket) Read(conn *websocket.Conn) (entities.Message, error) {
 	return entities.Message{}, errors.New("no message handlers registered")
 }
 
-func (w *Websocket) IsWebSocketUpgrade(c *gin.Context) bool {
+func (w *Websocket) isWebSocketUpgrade(c *gin.Context) bool {
 	if !websocket.IsWebSocketUpgrade(c.Request) {
 		w.logger.Error("not a websocket upgrade request",
 			zap.String("connection", c.GetHeader("Connection")),

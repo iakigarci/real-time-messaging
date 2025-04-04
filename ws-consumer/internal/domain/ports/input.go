@@ -1,7 +1,6 @@
 package ports
 
 import (
-	"net/http"
 	"real-time-messaging/consumer/internal/domain/entities"
 
 	"github.com/gin-gonic/gin"
@@ -9,9 +8,8 @@ import (
 )
 
 type Websocket interface {
-	Upgrade(w http.ResponseWriter, r *http.Request) (*websocket.Conn, error)
-	Read(conn *websocket.Conn) (entities.Message, error)
-	IsWebSocketUpgrade(c *gin.Context) bool
+	Upgrade(c *gin.Context) (*websocket.Conn, error)
+	Receive(conn *websocket.Conn) (entities.Message, error)
 }
 
 type Consumer interface {
