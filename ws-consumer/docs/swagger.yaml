@@ -27,6 +27,19 @@ paths:
           schema:
             $ref: '#/definitions/real-time-messaging_consumer_pkg_http.SuccessResponseData'
       summary: Health Check
+  /v1/ws:
+    get:
+      description: This endpoint establishes a WebSocket connection but cannot be
+        tested via Swagger UI. Use a WebSocket client instead (e.g., Postman, wscat).
+      responses:
+        "101":
+          description: Switching Protocols
+          schema:
+            type: string
+      summary: WebSocket Connection
+      tags:
+      - websocket
+      x-hidden: true
 securityDefinitions:
   BearerAuth:
     in: header

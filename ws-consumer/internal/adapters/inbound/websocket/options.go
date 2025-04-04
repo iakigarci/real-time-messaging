@@ -6,30 +6,30 @@ import (
 	"github.com/gorilla/websocket"
 )
 
-type Option func(*WebsocketService)
+type Option func(*Websocket)
 
-func NewWebsocketService(opts ...Option) *WebsocketService {
-	svc := &WebsocketService{}
+func NewWebsocket(opts ...Option) *Websocket {
+	w := &Websocket{}
 	for _, opt := range opts {
-		opt(svc)
+		opt(w)
 	}
-	return svc
+	return w
 }
 
 func WithUpgrader(upgrader websocket.Upgrader) Option {
-	return func(svc *WebsocketService) {
-		svc.upgrader = upgrader
+	return func(w *Websocket) {
+		w.upgrader = upgrader
 	}
 }
 
 func WithLogger(logger *logger.Logger) Option {
-	return func(svc *WebsocketService) {
-		svc.logger = logger
+	return func(w *Websocket) {
+		w.logger = logger
 	}
 }
 
 func WithHandlers(handlers ...func(messageType int, message []byte) error) Option {
-	return func(svc *WebsocketService) {
-		svc.handlers = handlers
+	return func(w *Websocket) {
+		w.handlers = handlers
 	}
 }

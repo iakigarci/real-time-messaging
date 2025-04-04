@@ -5,22 +5,21 @@ import (
 	"real-time-messaging/consumer/config"
 	di "real-time-messaging/consumer/internal"
 	"real-time-messaging/consumer/internal/adapters/inbound/rest/v1/handlers"
-	ws "real-time-messaging/consumer/internal/domain/services/websocket"
+	"real-time-messaging/consumer/internal/domain/services/consumer"
 
 	"github.com/gin-gonic/gin"
-	"github.com/gorilla/websocket"
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
 type Router struct {
 	Router    *gin.Engine
-	upgrader  websocket.Upgrader
 	container *di.Container
 }
 
 func New(config *config.Config, container *di.Container) *Router {
 	r := gin.Default()
+
 	router := &Router{
 		Router:    r,
 		container: container,
@@ -59,14 +58,13 @@ func (r *Router) buildIndexRoutes(rg *gin.RouterGroup) {
 }
 
 func (router *Router) buildWebSocketRoutes(rg *gin.RouterGroup) {
-	websocketService := ws.NewWebsocketService(
-		ws.WithLogger(router.container.Logger),
-		ws.WithUpgrader(router.upgrader),
+	consumerService := consumer.NewConsumerService(
+		consumer.WithLogger(router.container.Logger),
+		consumer.WithWebsocket(router.container.WebsocketPort),
 	)
 
 	webSocketHandler := handlers.NewWebsocketHandler(
-		router.upgrader,
-		websocketService,
+		consumerService,
 		router.container.Logger,
 	)
 

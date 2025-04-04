@@ -34,6 +34,24 @@ const docTemplate = `{
                     }
                 }
             }
+        },
+        "/v1/ws": {
+            "get": {
+                "description": "This endpoint establishes a WebSocket connection but cannot be tested via Swagger UI. Use a WebSocket client instead (e.g., Postman, wscat).",
+                "tags": [
+                    "websocket"
+                ],
+                "summary": "WebSocket Connection",
+                "responses": {
+                    "101": {
+                        "description": "Switching Protocols",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "x-hidden": true
+            }
         }
     },
     "definitions": {

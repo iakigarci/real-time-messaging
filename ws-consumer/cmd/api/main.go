@@ -2,14 +2,17 @@ package main
 
 import (
 	"log"
+	"net/http"
 
 	"real-time-messaging/consumer/config"
 	_ "real-time-messaging/consumer/docs"
 	di "real-time-messaging/consumer/internal"
 	http_gin "real-time-messaging/consumer/internal/adapters/inbound/rest"
+	ws "real-time-messaging/consumer/internal/adapters/inbound/websocket"
 	httpserver "real-time-messaging/consumer/pkg/http"
 	"real-time-messaging/consumer/pkg/logger"
 
+	"github.com/gorilla/websocket"
 	_ "github.com/swaggo/files"
 	_ "github.com/swaggo/gin-swagger"
 	"go.uber.org/zap"
@@ -42,8 +45,25 @@ func main() {
 }
 
 func getDIContainer(cfg *config.Config, logger *logger.Logger) *di.Container {
-	return di.NewContainer(cfg,
+	websocketPort := ws.NewWebsocket(
+		ws.WithLogger(logger),
+		ws.WithUpgrader(websocket.Upgrader{
+			ReadBufferSize:  1024,
+			WriteBufferSize: 1024,
+			CheckOrigin: func(r *http.Request) bool {
+				return true
+			},
+			EnableCompression: true,
+		}),
+		ws.WithHandlers(func(messageType int, message []byte) error {
+			return nil
+		}),
+	)
+
+	return di.NewContainer(
+		cfg,
 		logger,
+		websocketPort,
 	)
 }
 

@@ -2,44 +2,29 @@ package handlers
 
 import (
 	port "real-time-messaging/consumer/internal/domain/ports"
-	httpserver "real-time-messaging/consumer/pkg/http"
 	"real-time-messaging/consumer/pkg/logger"
 
 	"github.com/gin-gonic/gin"
-	"github.com/gorilla/websocket"
 )
 
 type WebsocketHandler struct {
-	upgrader         websocket.Upgrader
-	websocketService port.WebsocketService
-	logger           *logger.Logger
+	consumerPort port.Consumer
+	logger       *logger.Logger
 }
 
-func NewWebsocketHandler(upgrader websocket.Upgrader, websocketService port.WebsocketService, logger *logger.Logger) *WebsocketHandler {
+func NewWebsocketHandler(consumerPort port.Consumer, logger *logger.Logger) *WebsocketHandler {
 	return &WebsocketHandler{
-		upgrader:         upgrader,
-		websocketService: websocketService,
-		logger:           logger,
+		consumerPort: consumerPort,
+		logger:       logger,
 	}
 }
 
-// @Summary Websocket
-// @Description Websocket
-// @Accept json
-// @Produce json
-// @Success 201 {object} httpserver.SuccessResponseData
-// @Failure 400 {object} httpserver.ErrorResponseData
-// @Failure 401 {object} httpserver.ErrorResponseData
-// @Router /ws [get]
+// @Summary WebSocket Connection
+// @Description This endpoint establishes a WebSocket connection but cannot be tested via Swagger UI. Use a WebSocket client instead
+// @Tags websocket
+// @Success 101 {string} string "Switching Protocols"
+// @Router /v1/ws [get]
+// @x-hidden true
 func (h *WebsocketHandler) WebsocketReceive(c *gin.Context) {
-	conn, err := h.upgrader.Upgrade(c.Writer, c.Request, nil)
-	if err != nil {
-		httpserver.ErrorResponse(c, err)
-		return
-	}
-
-	h.websocketService.ReadMessage(conn)
-	conn.Close()
-
-	httpserver.SuccessResponse(c, "Websocket connected")
+	go h.consumerPort.Consume(c)
 }
