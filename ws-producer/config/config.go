@@ -28,6 +28,7 @@ type Config struct {
 	App      AppConfig      `mapstructure:"producer_app"`
 	HTTP     HTTPConfig     `mapstructure:"producer_http"`
 	Postgres DatabaseConfig `mapstructure:"postgres"`
+	NATS     NATSConfig     `mapstructure:"nats"`
 	Logging  LogConfig      `mapstructure:"logging"`
 }
 
@@ -53,6 +54,12 @@ type DatabaseConfig struct {
 	Password string `mapstructure:"password"`
 	SSLMode  string `mapstructure:"ssl_mode"`
 	PoolMax  int    `mapstructure:"pool_max"`
+}
+
+type NATSConfig struct {
+	URL      string `mapstructure:"url"`
+	Username string `mapstructure:"username"`
+	Password string `mapstructure:"password"`
 }
 
 type LogConfig struct {
