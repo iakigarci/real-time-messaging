@@ -4,7 +4,7 @@ A distributed real-time messaging system built with microservices architecture u
 
 ## ⚡ Features
 
-- Real-time message delivery using WebSocket and events
+- Real-time message delivery using WebSocket and events (event-broker)
 - Distributed architecture with microservices following DDD
 - Message persistence in PostgreSQL
 - NATS for message streaming
@@ -13,6 +13,7 @@ A distributed real-time messaging system built with microservices architecture u
 - Swagger for API documentation and testing
 - Air for docker automatic build
 - Authentication service with gRPC
+- Automated SQL migrations with goose
 
 ## 🏗️ Architecture
 
@@ -20,7 +21,6 @@ The system consists of three main microservices:
 
 1. **Authentication Service**
    - Handles user authentication and authorization
-   - Provides gRPC endpoints for user management
    - Manages user sessions and tokens
 
 2. **WebSocket Producer Service**
@@ -73,7 +73,7 @@ service/
 ### Prerequisites
 
 - Docker and Docker Compose
-- Make (optional, for convenience commands)
+- Make (optional for db migrations)
 
 ### Environment Setup
 
@@ -94,30 +94,11 @@ docker-compose up -d
 
 The services will be available at:
 - Auth Service: `localhost:50051` (gRPC)
-- Producer Service: `http://localhost:${PRODUCER_HTTP_PORT}`
-- Consumer Service: `http://localhost:${CONSUMER_HTTP_PORT}`
+- Producer Service: `http://localhost:${PRODUCER_HTTP_PORT}/v1/swagger/index.html`
+- Consumer Service: `http://localhost:${CONSUMER_HTTP_PORT}/v1/swagger/index.html`
 - PostgreSQL: `localhost:${POSTGRES_PORT}`
 - NATS: `localhost:${NATS_PORT}`
 
-## 📦 Service Details
-
-### Authentication Service
-- Handles user authentication and authorization
-- Provides gRPC endpoints for user management
-- Manages user sessions and tokens
-- Port: 50051 (gRPC)
-
-### WebSocket Producer Service
-- Handles WebSocket connections
-- Validates and processes incoming messages
-- Publishes messages to NATS topics
-- Port: ${PRODUCER_HTTP_PORT}
-
-### WebSocket Consumer Service
-- Subscribes to NATS topics
-- Processes and stores messages
-- Manages WebSocket connections for message delivery
-- Port: ${CONSUMER_HTTP_PORT}
 
 ## 🔧 Development
 
@@ -145,15 +126,33 @@ docker-compose logs -f ws-producer-app
 docker-compose logs -f ws-consumer-app
 ```
 
-# Test websocket
+### Database migration
+```bash
+# Check if you have GOPATH and goose installed
+# Install goose
+make install-goose
+
+# Migrate data to database
+make migrate-up
+
+# Check other commands
+make help
+```
+
+### Test websocket
 
 ```bash
-# If auth microservice is being used in middleware
-# Get the token from consumer login endpoint 
-websocat -H="Authorization: Bearer TOKEN" ws://localhost:8081/v1/ws/
+# View service logs
+docker-compose logs -f <service-name>
 
-# Subscribe to nats queue
+# Check service health
+curl http://localhost:${PORT}/health
+
+# Monitor NATS messages
 nats sub 'message.*' -s nats://nats_user:nats_password@localhost:4222
+
+# Websocket request with authentication middleware 
+websocat -H="Authorization: Bearer TOKEN" ws://localhost:8081/v1/ws/
 ```
 
 ## 📝 License
