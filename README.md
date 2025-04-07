@@ -68,7 +68,7 @@ service/
 └── test/          # Test files
 ```
 
-## 🚀 Getting Started
+## ⚐ Getting Started
 
 ### Prerequisites
 
@@ -100,7 +100,7 @@ The services will be available at:
 - NATS: `localhost:${NATS_PORT}`
 
 
-## 🔧 Development
+## 🗉 Development
 
 ### Building Services
 
@@ -155,7 +155,7 @@ nats sub 'message.*' -s nats://nats_user:nats_password@localhost:4222
 websocat -H="Authorization: Bearer TOKEN" ws://localhost:8081/v1/ws/
 ```
 
-## 📦 Testing
+## 🔍 Testing
 
 ### Running Tests
 
@@ -185,6 +185,6 @@ npm run test
 - Database operation tests
 - gRPC service tests
 
-## 📝 License
+## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
