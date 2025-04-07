@@ -1,4 +1,22 @@
 services:
+  auth-service:
+    build:
+      context: ./auth
+      dockerfile: Dockerfile
+    ports:
+      - "50051:50051"
+    env_file:
+      - .env
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - app_network
+    volumes:
+      - ./auth:/app
+      - ./.env:/app/.env
+    restart: unless-stopped
+
   ws-consumer-app:
     build:
       context: ./ws-consumer
