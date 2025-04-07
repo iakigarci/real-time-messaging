@@ -32,10 +32,6 @@ func NewClient(cfg *config.Config, logger *logger.Logger) (*Client, error) {
 	}, nil
 }
 
-func (c *Client) Publish(subject string, data []byte) error {
-	return c.conn.Publish(subject, data)
-}
-
 func (c *Client) Close() error {
 	c.conn.Close()
 	return nil

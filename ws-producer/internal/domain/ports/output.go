@@ -2,10 +2,9 @@ package ports
 
 import (
 	"context"
-
-	"github.com/nats-io/nats.go"
+	"real-time-messaging/producer/internal/domain/entities"
 )
 
 type MessageEventSubscriber interface {
-	SubscribeMessage(ctx context.Context) (<-chan *nats.Msg, error)
+	SubscribeMessage(ctx context.Context) (<-chan *entities.Message, error)
 }
