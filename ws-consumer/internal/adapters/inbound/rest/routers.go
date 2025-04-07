@@ -72,7 +72,7 @@ func (r *Router) buildWebSocketRoutes(rg *gin.RouterGroup) {
 		r.container.Logger,
 	)
 
-	websocketRoutes := rg.Group("/ws/", AuthMiddleware(r.container.AuthPort))
+	websocketRoutes := rg.Group("/ws/", AuthMiddlewareMock(r.container.AuthPort))
 	{
 		websocketRoutes.GET("", webSocketHandler.WebsocketReceive)
 	}

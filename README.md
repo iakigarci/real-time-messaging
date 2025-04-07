@@ -145,6 +145,17 @@ docker-compose logs -f ws-producer-app
 docker-compose logs -f ws-consumer-app
 ```
 
+# Test websocket
+
+```bash
+# If auth microservice is being used in middleware
+# Get the token from consumer login endpoint 
+websocat -H="Authorization: Bearer TOKEN" ws://localhost:8081/v1/ws/
+
+# Subscribe to nats queue
+nats sub 'message.*' -s nats://nats_user:nats_password@localhost:4222
+```
+
 ## 📝 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
