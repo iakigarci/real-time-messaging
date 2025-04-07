@@ -14,6 +14,6 @@ type Websocket interface {
 	AddConnection(conn *websocket.Conn)
 }
 
-type Consumer interface {
+type ConsumerService interface {
 	Consume(c *gin.Context) error
 }

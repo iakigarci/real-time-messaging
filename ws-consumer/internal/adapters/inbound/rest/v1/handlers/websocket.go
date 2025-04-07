@@ -10,11 +10,11 @@ import (
 )
 
 type WebsocketHandler struct {
-	consumerPort port.Consumer
+	consumerPort port.ConsumerService
 	logger       *logger.Logger
 }
 
-func NewWebsocketHandler(consumerPort port.Consumer, logger *logger.Logger) *WebsocketHandler {
+func NewWebsocketHandler(consumerPort port.ConsumerService, logger *logger.Logger) *WebsocketHandler {
 	return &WebsocketHandler{
 		consumerPort: consumerPort,
 		logger:       logger,

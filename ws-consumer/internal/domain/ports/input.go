@@ -13,7 +13,7 @@ type Websocket interface {
 	Receive(conn *websocket.Conn) (*entities.Message, error)
 }
 
-type Consumer interface {
+type ConsumerService interface {
 	Consume(c *gin.Context) error
 }
 

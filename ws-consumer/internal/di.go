@@ -9,12 +9,12 @@ import (
 
 // Container holds all the dependencies of the application
 type Container struct {
+	Config          *config.Config
+	Logger          *logger.Logger
 	MessageProducer port.MessageEventPublisher
 	WebsocketPort   port.Websocket
 	AuthPort        port.Authentication
 	NatsClient      *nats.Client
-	Config          *config.Config
-	Logger          *logger.Logger
 	UserRepository  port.UserRepository
 	EventRepository port.EventRepository
 }
