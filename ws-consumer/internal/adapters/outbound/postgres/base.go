@@ -17,6 +17,12 @@ var (
 			EXTRACT(EPOCH FROM created_at) as created_at,
 			EXTRACT(EPOCH FROM updated_at) as updated_at
 		FROM users`
+
+	BASE_EVENT_QUERY = `
+		INSERT INTO events (id, user_id, data)
+		VALUES ($1, $2, $3)
+		RETURNING id, user_id, data, EXTRACT(EPOCH FROM created_at) as created_at, EXTRACT(EPOCH FROM updated_at) as updated_at
+	`
 )
 
 type QueryBuilder struct {

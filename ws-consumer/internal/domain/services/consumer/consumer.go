@@ -15,6 +15,7 @@ import (
 type ConsumerService struct {
 	wsPort          port.Websocket
 	messageProducer port.MessageEventPublisher
+	eventRepository port.EventRepository
 	logger          *logger.Logger
 }
 
@@ -39,16 +40,27 @@ func (s *ConsumerService) Consume(c *gin.Context) error {
 				s.logger.Error("failed to read websocket message", zap.Error(err))
 				return
 			}
-
-			if err := s.messageProducer.PublishMessage(context.Background(), events.BaseEvent{
+			event := events.BaseEvent{
 				ID:        uuid.New().String(),
 				CreatedAt: time.Now(),
 				Data:      message,
-			}); err != nil {
+			}
+
+			if err := s.messageProducer.PublishMessage(context.Background(), event); err != nil {
 				s.logger.Error("failed to publish message to event broker", zap.Error(err))
 				return
 			}
 
+			userID, exists := c.Get("user_id")
+			if !exists {
+				s.logger.Error("user_id not found in context")
+				return
+			}
+
+			if err := s.eventRepository.CreateEvent(context.Background(), &event, userID.(string)); err != nil {
+				s.logger.Error("failed to create event", zap.Error(err))
+				return
+			}
 			s.logger.Info("message published to event broker", zap.Any("message", message))
 		}
 	}()

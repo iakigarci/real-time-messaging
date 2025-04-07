@@ -23,3 +23,7 @@ type Authentication interface {
 type UserRepository interface {
 	GetUserByEmail(ctx context.Context, email string) (*entities.User, error)
 }
+
+type EventRepository interface {
+	CreateEvent(ctx context.Context, event *events.BaseEvent, userID string) error
+}
