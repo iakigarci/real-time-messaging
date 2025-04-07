@@ -26,3 +26,6 @@ ws-producer/tmp/build-errors.log
 ws-producer/tmp/main
 ws-consumer/tmp/*
 ws-producer/tmp/*
+
+node_modules/
+*.log
