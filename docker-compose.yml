@@ -13,7 +13,6 @@ services:
     networks:
       - app_network
     volumes:
-      - ./auth:/app
       - ./.env:/app/.env
     restart: unless-stopped
 
@@ -57,15 +56,13 @@ services:
 
   db:
     image: postgres:14-alpine
-    environment:
-      - POSTGRES_HOST_AUTH_METHOD=md5
-      - POSTGRES_USER=${POSTGRES_USER}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    env_file:
+      - .env
     ports: 
       - "${POSTGRES_PORT}:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
-      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./migrations:/docker-entrypoint-initdb.d
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER}"]
       interval: 5s
@@ -100,3 +97,4 @@ volumes:
   consumer_data:
   producer_data:
   nats_data:
+  auth_data:
