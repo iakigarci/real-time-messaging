@@ -16,6 +16,7 @@ type Container struct {
 	Config          *config.Config
 	Logger          *logger.Logger
 	UserRepository  port.UserRepository
+	EventRepository port.EventRepository
 }
 
 func NewContainer(
@@ -26,6 +27,7 @@ func NewContainer(
 	messageProducer port.MessageEventPublisher,
 	authPort port.Authentication,
 	userRepository port.UserRepository,
+	eventRepository port.EventRepository,
 ) *Container {
 	return &Container{
 		Config:          cfg,
@@ -35,6 +37,7 @@ func NewContainer(
 		MessageProducer: messageProducer,
 		AuthPort:        authPort,
 		UserRepository:  userRepository,
+		EventRepository: eventRepository,
 	}
 }
 

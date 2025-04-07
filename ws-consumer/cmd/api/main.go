@@ -90,6 +90,7 @@ func getDIContainer(cfg *config.Config, logger *logger.Logger) *di.Container {
 	}
 
 	userRepository := postgres.NewUserRepository(db.DB)
+	eventRepository := postgres.NewEventRepository(db.DB)
 
 	return di.NewContainer(
 		cfg,
@@ -99,6 +100,7 @@ func getDIContainer(cfg *config.Config, logger *logger.Logger) *di.Container {
 		messageProducer,
 		authClient,
 		userRepository,
+		eventRepository,
 	)
 }
 

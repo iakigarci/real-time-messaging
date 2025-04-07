@@ -33,7 +33,13 @@ func (s *ConsumerService) Consume(c *gin.Context) error {
 		return err
 	}
 
-	go func() {
+	userID, exists := c.Get("user_id")
+	if !exists {
+		s.logger.Error("user_id not found in context")
+		return nil
+	}
+
+	go func(userID string) {
 		for {
 			message, err := s.wsPort.Receive(conn)
 			if err != nil {
@@ -51,19 +57,13 @@ func (s *ConsumerService) Consume(c *gin.Context) error {
 				return
 			}
 
-			userID, exists := c.Get("user_id")
-			if !exists {
-				s.logger.Error("user_id not found in context")
-				return
-			}
-
-			if err := s.eventRepository.CreateEvent(context.Background(), &event, userID.(string)); err != nil {
+			if err := s.eventRepository.CreateEvent(context.Background(), &event, userID); err != nil {
 				s.logger.Error("failed to create event", zap.Error(err))
 				return
 			}
 			s.logger.Info("message published to event broker", zap.Any("message", message))
 		}
-	}()
+	}(userID.(string))
 
 	return nil
 }

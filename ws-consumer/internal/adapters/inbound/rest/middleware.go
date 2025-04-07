@@ -44,7 +44,7 @@ func AuthMiddleware(authClient port.Authentication) gin.HandlerFunc {
 
 func AuthMiddlewareMock(authClient port.Authentication) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		c.Set("user_id", "123")
+		c.Set("user_id", "00000000-0000-0000-0000-000000000000")
 		c.Next()
 	}
 }

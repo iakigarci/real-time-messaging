@@ -32,3 +32,9 @@ func WithMessageProducer(messageProducer port.MessageEventPublisher) Option {
 		c.messageProducer = messageProducer
 	}
 }
+
+func WithEventRepository(eventRepository port.EventRepository) Option {
+	return func(c *ConsumerService) {
+		c.eventRepository = eventRepository
+	}
+}
