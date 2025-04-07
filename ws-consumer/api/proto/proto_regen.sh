@@ -7,8 +7,8 @@ export PATH="$PATH:$(go env GOPATH)/bin"
 
 # add file name to generate the new proto
 
-PROTO_PATH="../api/proto/v1/"
-PROTO_FILE="payments"
+PROTO_PATH="./" 
+PROTO_FILE="auth"
 
 protoc --go_out=${PROTO_PATH} --go_opt=paths=source_relative \
     --go-grpc_out=${PROTO_PATH} --go-grpc_opt=paths=source_relative \

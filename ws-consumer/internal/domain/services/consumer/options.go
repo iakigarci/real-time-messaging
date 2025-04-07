@@ -7,7 +7,7 @@ import (
 
 type Option func(*ConsumerService)
 
-func NewConsumerService(opts ...Option) *ConsumerService {
+func New(opts ...Option) *ConsumerService {
 	c := &ConsumerService{}
 	for _, opt := range opts {
 		opt(c)

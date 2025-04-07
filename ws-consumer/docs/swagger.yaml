@@ -1,5 +1,25 @@
 basePath: /v1
 definitions:
+  internal_adapters_inbound_rest_v1_handlers.LoginRequest:
+    properties:
+      email:
+        example: john.doe@example.com
+        type: string
+      password:
+        example: password123
+        type: string
+    required:
+    - email
+    - password
+    type: object
+  real-time-messaging_consumer_pkg_http.ErrorResponseData:
+    properties:
+      error:
+        type: string
+      status:
+        description: '"error"'
+        type: string
+    type: object
   real-time-messaging_consumer_pkg_http.SuccessResponseData:
     properties:
       data: {}
@@ -14,6 +34,36 @@ info:
   title: Real-Time Messaging Consumer API
   version: "1.0"
 paths:
+  /auth/login:
+    post:
+      consumes:
+      - application/json
+      description: Authenticate user and return JWT token
+      parameters:
+      - description: Login credentials
+        in: body
+        name: login
+        required: true
+        schema:
+          $ref: '#/definitions/internal_adapters_inbound_rest_v1_handlers.LoginRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/real-time-messaging_consumer_pkg_http.SuccessResponseData'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/real-time-messaging_consumer_pkg_http.ErrorResponseData'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/real-time-messaging_consumer_pkg_http.ErrorResponseData'
+      summary: User login
+      tags:
+      - auth
   /health:
     get:
       consumes:
@@ -30,7 +80,7 @@ paths:
   /v1/ws:
     get:
       description: This endpoint establishes a WebSocket connection but cannot be
-        tested via Swagger UI. Use a WebSocket client instead (e.g., Postman, wscat).
+        tested via Swagger UI. Use a WebSocket client instead
       responses:
         "101":
           description: Switching Protocols

@@ -9,6 +9,52 @@
     "host": "localhost:8081",
     "basePath": "/v1",
     "paths": {
+        "/auth/login": {
+            "post": {
+                "description": "Authenticate user and return JWT token",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "auth"
+                ],
+                "summary": "User login",
+                "parameters": [
+                    {
+                        "description": "Login credentials",
+                        "name": "login",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/internal_adapters_inbound_rest_v1_handlers.LoginRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/real-time-messaging_consumer_pkg_http.SuccessResponseData"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/real-time-messaging_consumer_pkg_http.ErrorResponseData"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/real-time-messaging_consumer_pkg_http.ErrorResponseData"
+                        }
+                    }
+                }
+            }
+        },
         "/health": {
             "get": {
                 "description": "Check if the service is healthy",
@@ -31,7 +77,7 @@
         },
         "/v1/ws": {
             "get": {
-                "description": "This endpoint establishes a WebSocket connection but cannot be tested via Swagger UI. Use a WebSocket client instead (e.g., Postman, wscat).",
+                "description": "This endpoint establishes a WebSocket connection but cannot be tested via Swagger UI. Use a WebSocket client instead",
                 "tags": [
                     "websocket"
                 ],
@@ -49,6 +95,35 @@
         }
     },
     "definitions": {
+        "internal_adapters_inbound_rest_v1_handlers.LoginRequest": {
+            "type": "object",
+            "required": [
+                "email",
+                "password"
+            ],
+            "properties": {
+                "email": {
+                    "type": "string",
+                    "example": "john.doe@example.com"
+                },
+                "password": {
+                    "type": "string",
+                    "example": "password123"
+                }
+            }
+        },
+        "real-time-messaging_consumer_pkg_http.ErrorResponseData": {
+            "type": "object",
+            "properties": {
+                "error": {
+                    "type": "string"
+                },
+                "status": {
+                    "description": "\"error\"",
+                    "type": "string"
+                }
+            }
+        },
         "real-time-messaging_consumer_pkg_http.SuccessResponseData": {
             "type": "object",
             "properties": {

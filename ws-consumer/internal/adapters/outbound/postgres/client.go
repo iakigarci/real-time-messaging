@@ -28,7 +28,7 @@ type Postgres struct {
 	logger *logger.Logger
 }
 
-func NewClient(cfg *config.Config, logger *logger.Logger) (*Postgres, error) {
+func New(cfg *config.Config, logger *logger.Logger) (*Postgres, error) {
 	postgres, err := initPg(cfg, logger)
 	if err != nil {
 		logger.Error("failed to initialize postgres client", zap.Error(err))

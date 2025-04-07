@@ -11,9 +11,11 @@ import (
 type Container struct {
 	MessageProducer port.MessageEventPublisher
 	WebsocketPort   port.Websocket
+	AuthPort        port.Authentication
 	NatsClient      *nats.Client
 	Config          *config.Config
 	Logger          *logger.Logger
+	UserRepository  port.UserRepository
 }
 
 func NewContainer(
@@ -22,6 +24,8 @@ func NewContainer(
 	websocketPort port.Websocket,
 	natsClient *nats.Client,
 	messageProducer port.MessageEventPublisher,
+	authPort port.Authentication,
+	userRepository port.UserRepository,
 ) *Container {
 	return &Container{
 		Config:          cfg,
@@ -29,6 +33,8 @@ func NewContainer(
 		WebsocketPort:   websocketPort,
 		NatsClient:      natsClient,
 		MessageProducer: messageProducer,
+		AuthPort:        authPort,
+		UserRepository:  userRepository,
 	}
 }
 

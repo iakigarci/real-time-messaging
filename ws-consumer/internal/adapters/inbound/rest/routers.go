@@ -5,7 +5,9 @@ import (
 	"real-time-messaging/consumer/config"
 	di "real-time-messaging/consumer/internal"
 	"real-time-messaging/consumer/internal/adapters/inbound/rest/v1/handlers"
+	"real-time-messaging/consumer/internal/domain/services/auth"
 	"real-time-messaging/consumer/internal/domain/services/consumer"
+	"real-time-messaging/consumer/internal/domain/services/user"
 
 	"github.com/gin-gonic/gin"
 	swaggerFiles "github.com/swaggo/files"
@@ -36,6 +38,7 @@ func New(config *config.Config, container *di.Container) *Router {
 		router.buildWebSocketRoutes(v1)
 		router.buildSwaggerRoutes(v1)
 		router.buildIndexRoutes(v1)
+		router.buildAuthRoutes(v1)
 	}
 
 	r.Run(fmt.Sprintf(":%d", config.HTTP.Port))
@@ -57,20 +60,39 @@ func (r *Router) buildIndexRoutes(rg *gin.RouterGroup) {
 	}
 }
 
-func (router *Router) buildWebSocketRoutes(rg *gin.RouterGroup) {
-	consumerService := consumer.NewConsumerService(
-		consumer.WithLogger(router.container.Logger),
-		consumer.WithWebsocket(router.container.WebsocketPort),
-		consumer.WithMessageProducer(router.container.MessageProducer),
+func (r *Router) buildWebSocketRoutes(rg *gin.RouterGroup) {
+	consumerService := consumer.New(
+		consumer.WithLogger(r.container.Logger),
+		consumer.WithWebsocket(r.container.WebsocketPort),
+		consumer.WithMessageProducer(r.container.MessageProducer),
 	)
 
 	webSocketHandler := handlers.NewWebsocketHandler(
 		consumerService,
-		router.container.Logger,
+		r.container.Logger,
 	)
 
-	websocketRoutes := rg.Group("/ws/")
+	websocketRoutes := rg.Group("/ws/", AuthMiddleware(r.container.AuthPort))
 	{
 		websocketRoutes.GET("", webSocketHandler.WebsocketReceive)
+	}
+}
+
+func (r *Router) buildAuthRoutes(rg *gin.RouterGroup) {
+	userService := user.New(
+		user.WithUserRepository(r.container.UserRepository),
+		user.WithLogger(r.container.Logger),
+	)
+
+	authService := auth.New(
+		auth.WithAuthService(r.container.AuthPort),
+		auth.WithLogger(r.container.Logger),
+	)
+
+	authHandler := handlers.NewAuthHandler(authService, userService)
+
+	authRoutes := rg.Group("/auth")
+	{
+		authRoutes.POST("/login", authHandler.Login)
 	}
 }

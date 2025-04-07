@@ -10,8 +10,10 @@ import (
 	di "real-time-messaging/consumer/internal"
 	http_gin "real-time-messaging/consumer/internal/adapters/inbound/rest"
 	ws "real-time-messaging/consumer/internal/adapters/inbound/websocket"
+	"real-time-messaging/consumer/internal/adapters/outbound/grpc"
 	"real-time-messaging/consumer/internal/adapters/outbound/nats"
 	"real-time-messaging/consumer/internal/adapters/outbound/nats/producers"
+	"real-time-messaging/consumer/internal/adapters/outbound/postgres"
 	httpserver "real-time-messaging/consumer/pkg/http"
 	"real-time-messaging/consumer/pkg/logger"
 
@@ -75,12 +77,28 @@ func getDIContainer(cfg *config.Config, logger *logger.Logger) *di.Container {
 
 	messageProducer := producers.NewMessageProducer(natsClient)
 
+	authClient, err := grpc.NewAuth(cfg, logger)
+	if err != nil {
+		logger.Error("Failed to create auth client", zap.Error(err))
+		os.Exit(1)
+	}
+
+	db, err := postgres.New(cfg, logger)
+	if err != nil {
+		logger.Error("Failed to create database", zap.Error(err))
+		os.Exit(1)
+	}
+
+	userRepository := postgres.NewUserRepository(db.DB)
+
 	return di.NewContainer(
 		cfg,
 		logger,
 		websocketPort,
 		natsClient,
 		messageProducer,
+		authClient,
+		userRepository,
 	)
 }
 

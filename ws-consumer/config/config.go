@@ -30,6 +30,7 @@ type Config struct {
 	Postgres DatabaseConfig `mapstructure:"postgres"`
 	NATS     NATSConfig     `mapstructure:"nats"`
 	Logging  LogConfig      `mapstructure:"logging"`
+	Grpc     GrpcConfig     `mapstructure:"grpc"`
 }
 
 type AppConfig struct {
@@ -65,6 +66,15 @@ type NATSConfig struct {
 	URL      string `mapstructure:"url"`
 	Username string `mapstructure:"username"`
 	Password string `mapstructure:"password"`
+}
+
+type GrpcConfig struct {
+	Auth GrpcAuthConfig `mapstructure:"auth"`
+}
+
+type GrpcAuthConfig struct {
+	Host string `mapstructure:"host"`
+	Port int    `mapstructure:"port"`
 }
 
 func LoadConfig[E any]() (*E, error) {
