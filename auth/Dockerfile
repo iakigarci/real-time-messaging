@@ -16,6 +16,12 @@ COPY package*.json ./
 RUN npm install --production \
     && npm cache clean --force
 
+# Create proto directory
+RUN mkdir -p /app/proto
+
+# Copy proto file to the correct location
+COPY src/proto/auth.proto /app/proto/
+
 # Copy application files
 COPY . .
 
@@ -33,4 +39,4 @@ EXPOSE 50051
 ENTRYPOINT ["/usr/bin/dumb-init", "--"]
 
 # Start the service
-CMD ["node", "server.js"] 
+CMD ["node", "src/server.js"] 

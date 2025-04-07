@@ -2,9 +2,9 @@
   "name": "auth-service",
   "version": "1.0.0",
   "description": "Authentication gRPC service",
-  "main": "server.js",
+  "main": "src/server.js",
   "scripts": {
-    "start": "node server.js",
+    "start": "node src/server.js",
     "test": "jest"
   },
   "dependencies": {
@@ -18,3 +18,4 @@
     "supertest": "^6.0.0"
   }
 }
+  

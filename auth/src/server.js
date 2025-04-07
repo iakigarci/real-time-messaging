@@ -5,7 +5,7 @@ const AuthService = require("./authService");
 const User = require("./models");
 
 // Load proto file
-const PROTO_PATH = path.join(__dirname, "proto/auth.proto");
+const PROTO_PATH = path.join(__dirname, "..", "proto/auth.proto");
 const packageDefinition = protoLoader.loadSync(PROTO_PATH, {
   keepCase: true,
   longs: String,
