@@ -1,9 +1,8 @@
 package ws
 
 import (
-	"errors"
-	"fmt"
 	"real-time-messaging/consumer/internal/domain/entities"
+	"real-time-messaging/consumer/internal/domain/errors"
 	"real-time-messaging/consumer/pkg/logger"
 
 	"github.com/gin-gonic/gin"
@@ -19,14 +18,14 @@ type Websocket struct {
 
 func (w *Websocket) Upgrade(c *gin.Context) (*websocket.Conn, error) {
 	if !w.isWebSocketUpgrade(c) {
-		return nil, errors.New("not a websocket upgrade request")
+		return nil, errors.ErrNotWebSocketUpgrade
 	}
 	return w.upgrader.Upgrade(c.Writer, c.Request, nil)
 }
 
 func (w *Websocket) Receive(conn *websocket.Conn) (*entities.Message, error) {
 	if len(w.handlers) == 0 {
-		return nil, fmt.Errorf("no message handlers registered")
+		return nil, errors.ErrNoMessageHandlersRegistered
 	}
 
 	messageType, message, err := conn.ReadMessage()
@@ -48,7 +47,7 @@ func (w *Websocket) Receive(conn *websocket.Conn) (*entities.Message, error) {
 
 func (w *Websocket) isWebSocketUpgrade(c *gin.Context) bool {
 	if !websocket.IsWebSocketUpgrade(c.Request) {
-		w.logger.Error("not a websocket upgrade request",
+		w.logger.Error(errors.ErrNotWebSocketUpgrade.Error(),
 			zap.String("connection", c.GetHeader("Connection")),
 			zap.String("upgrade", c.GetHeader("Upgrade")),
 		)

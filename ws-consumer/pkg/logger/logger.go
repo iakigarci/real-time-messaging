@@ -14,6 +14,11 @@ var (
 	once     sync.Once
 )
 
+type LoggerI interface {
+	Info(msg string, fields ...zap.Field)
+	Error(msg string, fields ...zap.Field)
+}
+
 type Logger struct {
 	*zap.Logger
 }
