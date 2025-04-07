@@ -155,6 +155,36 @@ nats sub 'message.*' -s nats://nats_user:nats_password@localhost:4222
 websocat -H="Authorization: Bearer TOKEN" ws://localhost:8081/v1/ws/
 ```
 
+## 📦 Testing
+
+### Running Tests
+
+1. Go
+```bash
+# Run all tests
+go test ./... -v
+
+# Run tests with coverage
+go test ./... -cover
+
+# Run specific service tests
+cd auth && go test ./... -v
+cd ws-consumer && go test ./... -v
+cd ws-producer && go test ./... -v
+```
+
+2. JavaScipt
+```bash
+npm run test
+```
+
+### Test Coverage
+
+- Unit tests for authentication and message processing
+- Integration tests for WebSocket and NATS
+- Database operation tests
+- gRPC service tests
+
 ## 📝 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
