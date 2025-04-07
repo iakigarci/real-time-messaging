@@ -200,3 +200,41 @@ func (mr *MockUserRepositoryMockRecorder) GetUserByEmail(ctx, email any) *gomock
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetUserByEmail", reflect.TypeOf((*MockUserRepository)(nil).GetUserByEmail), ctx, email)
 }
+
+// MockEventRepository is a mock of EventRepository interface.
+type MockEventRepository struct {
+	ctrl     *gomock.Controller
+	recorder *MockEventRepositoryMockRecorder
+	isgomock struct{}
+}
+
+// MockEventRepositoryMockRecorder is the mock recorder for MockEventRepository.
+type MockEventRepositoryMockRecorder struct {
+	mock *MockEventRepository
+}
+
+// NewMockEventRepository creates a new mock instance.
+func NewMockEventRepository(ctrl *gomock.Controller) *MockEventRepository {
+	mock := &MockEventRepository{ctrl: ctrl}
+	mock.recorder = &MockEventRepositoryMockRecorder{mock}
+	return mock
+}
+
+// EXPECT returns an object that allows the caller to indicate expected use.
+func (m *MockEventRepository) EXPECT() *MockEventRepositoryMockRecorder {
+	return m.recorder
+}
+
+// CreateEvent mocks base method.
+func (m *MockEventRepository) CreateEvent(ctx context.Context, event *events.BaseEvent, userID string) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CreateEvent", ctx, event, userID)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// CreateEvent indicates an expected call of CreateEvent.
+func (mr *MockEventRepositoryMockRecorder) CreateEvent(ctx, event, userID any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateEvent", reflect.TypeOf((*MockEventRepository)(nil).CreateEvent), ctx, event, userID)
+}
